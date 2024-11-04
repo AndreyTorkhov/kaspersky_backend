@@ -12,6 +12,17 @@ exports.getAllUsers = async (req, res, next) => {
 
 exports.createUser = async (req, res, next) => {
   try {
+    const { name, surname, status, role } = req.body;
+
+    if (
+      !name ||
+      !surname ||
+      typeof status !== "boolean" ||
+      !["User", "Admin", "Guest"].includes(role)
+    ) {
+      return res.status(400).json({ message: "Invalid user data" });
+    }
+
     const user = await userService.createUser(req.body);
     res.status(201).json(user);
   } catch (error) {

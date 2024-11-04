@@ -4,19 +4,19 @@ const cors = require("cors");
 const config = require("../../config/config");
 const userRoutes = require("../../api/routes/user.routes");
 const initializeDatabase = require("../../pkg/db/migrations");
-const createDatabase = require("../../pkg/db/initDatabase"); // Импортируем скрипт
+const createDatabase = require("../../pkg/db/initDatabase");
+const errorHandler = require("../../middleware/errorHandler");
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(errorHandler);
 
 app.use("/api", userRoutes);
 
 const startServer = async () => {
-  // Создаем базу данных, если её нет
   await createDatabase();
 
-  // Запускаем Sequelize и сервер
   await initializeDatabase();
 
   app.listen(config.serverPort, () => {

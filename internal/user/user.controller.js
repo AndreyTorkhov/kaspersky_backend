@@ -2,7 +2,8 @@ const userService = require("./user.service");
 
 exports.getAllUsers = async (req, res, next) => {
   try {
-    const users = await userService.getAllUsers();
+    const searchQuery = req.query.q;
+    const users = await userService.getAllUsers(searchQuery);
     res.json(users);
   } catch (error) {
     next(error);

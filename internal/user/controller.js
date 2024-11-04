@@ -1,4 +1,5 @@
 const userService = require("./service");
+const { validateUserData } = require("./validator");
 
 exports.getAllUsers = async (req, res, next) => {
   try {
@@ -11,7 +12,6 @@ exports.getAllUsers = async (req, res, next) => {
 };
 
 exports.getUserById = async (req, res, next) => {
-  // Новый метод
   try {
     const userId = req.params.id;
     const user = await userService.getUserById(userId);
@@ -27,15 +27,11 @@ exports.getUserById = async (req, res, next) => {
 
 exports.createUser = async (req, res, next) => {
   try {
-    const { name, surname, status, role } = req.body;
-    if (
-      !name ||
-      !surname ||
-      typeof status !== "boolean" ||
-      !["User", "Admin", "Guest"].includes(role)
-    ) {
-      return res.status(400).json({ message: "Invalid user data" });
+    const validation = validateUserData(req.body);
+    if (!validation.valid) {
+      return res.status(400).json({ message: validation.message });
     }
+
     const user = await userService.createUser(req.body);
     res.status(201).json(user);
   } catch (error) {

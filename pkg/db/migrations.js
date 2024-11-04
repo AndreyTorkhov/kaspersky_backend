@@ -1,9 +1,9 @@
 const sequelize = require("./db");
-const User = require("../../internal/user/user.model");
+const User = require("../../internal/user/model");
 
 const initializeDatabase = async () => {
   try {
-    await sequelize.sync(); // Синхронизируем модель с базой данных без удаления таблиц
+    await sequelize.sync();
     console.log("Database synchronized");
   } catch (error) {
     console.error("Error initializing database:", error);

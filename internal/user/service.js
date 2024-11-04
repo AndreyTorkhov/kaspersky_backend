@@ -1,9 +1,5 @@
 const { Op } = require("sequelize");
-const User = require("./user.model");
-
-exports.createUser = async (userData) => {
-  return await User.create(userData);
-};
+const User = require("./model");
 
 exports.getAllUsers = async (searchQuery) => {
   const where = {};
@@ -16,6 +12,14 @@ exports.getAllUsers = async (searchQuery) => {
   }
 
   return await User.findAll({ where });
+};
+
+exports.getUserById = async (userId) => {
+  return await User.findByPk(userId);
+};
+
+exports.createUser = async (userData) => {
+  return await User.create(userData);
 };
 
 exports.updateUser = async (userId, updatedData) => {

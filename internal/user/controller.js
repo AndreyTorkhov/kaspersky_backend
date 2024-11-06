@@ -3,9 +3,20 @@ const { validateUserData } = require("./validator");
 
 exports.getAllUsers = async (req, res, next) => {
   try {
-    const searchQuery = req.query.q;
-    const users = await userService.getAllUsers(searchQuery);
-    res.json(users);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+    const searchQuery = req.query.q || "";
+
+    const users = await userService.getAllUsers({ searchQuery, offset, limit });
+    const totalUsers = await userService.countUsers(searchQuery);
+
+    res.json({
+      data: users,
+      total: totalUsers,
+      page,
+      totalPages: Math.ceil(totalUsers / limit),
+    });
   } catch (error) {
     next(error);
   }
